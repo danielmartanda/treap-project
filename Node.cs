@@ -1,4 +1,4 @@
-﻿/* 
+/* 
 ================================================================
 Course: COIS 3020 - Data Structures and Algorithms II
 Assignment 2: Treap Data Structure
@@ -16,6 +16,30 @@ Authors:
 ================================================================
 */
 
-namespace treapproject {
+namespace treapproject
+{
+    /*
+    Node of treap: stores a key, a random priority,
+    and references to left/right children
 
+    Invariants:
+    - BST property on Key
+    - Max-heap property on Priority
+    */
+
+    public class TreapNode<T> where T : IComparable<T>
+    {
+        public T Key;
+        public int Priority;
+        public TreapNode<T> Left;
+        public TreapNode<T> Right;
+
+        public TreapNode(T key, int priority)
+        {
+            Key = key;
+            Priority = priority;
+            Left = null;
+            Right = null;
+        }
+    }
 }
