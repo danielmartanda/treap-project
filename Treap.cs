@@ -169,7 +169,101 @@ namespace treapproject
 
             return false; // not found
         }
-        
+
+        /*
+        Deletion
+        */
+
+        // Summary
+        // Public delete method
+        // Returns true if a node was actually removed; false if key not found
+        // Expected time: O(log n)
+
+        public bool Delete(T key)
+        {
+            bool removed;
+            _root = Delete(_root, key, out removed);
+            return removed;
+        }
+
+        /*Summary
+        Recursive delete:
+        1) Search for the node by BST property
+        2) When found:
+            If it has 0 or 1 child, delete in the usual BST way
+            If it has 2 children, rotate the node down (towards the child
+            with higher priority) to preserve heap property,
+            and then delete once it has <= 1 child.
+        */
+        private TreapNode<T> Delete(TreapNode<T> root, T key, out bool removed)
+        {
+            if (root == null)
+            {
+                removed = false;
+                return null;
+            }
+
+            int cmp = key.CompareTo(root.Key);
+
+            if (cmp < 0)
+            {
+                // Go Left
+                root.Left = Delete(root.Left, key, out removed);
+            }
+            else if (cmp > 0)
+            {
+                // Go Right
+                root.Right = Delete(root.Right, key, out removed);
+            }
+            else
+            {
+                // Found the node to delete 
+                removed = true;
+
+                // case 1 : leaf node
+                if (root.Left == null && root.Right == null)
+                {
+                    return null;
+                }
+
+                //case2: only one child
+
+                if (root.Left == null)
+                {
+                    return root.Right;
+                }
+                if (root.Right == null)
+                {
+                    return root.Left;
+                }
+
+                /*
+                Case 3 two children
+                Rotate with the child that has higher priority
+                so that heap property remains valid while we push 
+                this node down the tree
+                */
+                if (root.Left.Priority > root.Right.Priority)
+                {
+                    root = RotateRight(root);
+
+                    // After rotation, the original root is now root.Right
+                    // We still want to delete 'key', but from the right subtree now
+                    bool dummy;
+                    root.Right = Delete(root.Right, key, out dummy);
+                }
+                else
+                {
+                    root = RotateLeft(root);
+
+                    // After rotation. original root is now root.Left
+                    bool dummy;
+                    root.Left = Delete(root.Left, key, out dummy);
+                }
+            }
+
+            return root;
+        }
     }
 
 }
