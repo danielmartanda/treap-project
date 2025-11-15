@@ -110,6 +110,39 @@ namespace treapproject
                 int priority = _rng.Next();
                 return new TreapNode<T>(key, priority);
             }
+
+            int cmp = key.CompareTo(root.Key);
+
+            if (cmp < 0)
+            {
+                // Insert into left subtree
+                root.Left = Insert(root.Left, key);
+
+                // If left child violates heap property, rotate right
+                if (root.Left != null && root.Left.Priority > root.Priority)
+                {
+                    root = RotateRight(root);
+                }
+            }
+            else if (cmp > 0)
+            {
+                // Insert into right subtree
+                root.Right = Insert(root.Right, key);
+
+                // If right child violates heap property, roate left
+                if (root.Right != null && root.Right.Priority > root.Priority)
+                {
+                    root = RotateLeft(root);
+                }
+            }
+            else
+            {
+                // cmp = 0: key already in treap 
+                // For this assignment, we ignire duplicates
+                // and do nothing no new node
+            }
+
+            return root;
         }
         
     }
