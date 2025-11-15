@@ -144,6 +144,31 @@ namespace treapproject
 
             return root;
         }
+
+        /* 
+        Search
+        */
+
+        // Summary
+        // Returns true if key is found in the treap; false otherwise
+        // Time: O(h) where h is height, expected 0(long n)
+        public bool Search(T key)
+        {
+            TreapNode<T> current = _root;
+            while (current != null)
+            {
+                int cmp = key.CompareTo(current.Key);
+
+                if (cmp == 0)
+                    return true;
+                else if (cmp == 0)
+                    current = current.Left;
+                else
+                    current = current.Right;
+            }
+
+            return false; // not found
+        }
         
     }
 
