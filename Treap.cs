@@ -263,6 +263,57 @@ namespace treapproject
 
             return root;
         }
-    }
 
+        /*
+            Split
+
+            gives a key k a split one treap into two: 
+            Leaf treap all keys < k
+            Right treap all keys > k
+        */
+        private static void Split(TreapNode root, int key, out TreapNode leftRoot, out TreapNode rightRoot)
+        {
+            if (root == null)
+            {
+                leftRoot = null;
+                rightRoot = null;
+                return;
+            }
+
+            if (key < root.Key)
+            {
+                // All keys <= key must live entriely in root.Left
+                // Split the left subtree
+                Split(root.Left, key, out leftRoot, out TreapNode newLeftRight);
+                root.Left = newLeftRight; //Reattach leftover part
+                rightRoot = root; // Root and its right subtree go to "right"
+            }
+            else
+            {
+                // root.Key <= key, so root belongs to left side
+                Split(root.Left, key, out leftRoot, out TreapNode newRightLeft, out rightRoot);
+                root.Right = newRightLeft; //Reattach leftover part
+                leftRoot = root; // Root and its right subtree go to "left"
+            }
+        }
+
+        /*
+        Public split:
+        Splits this treap into a new Treap objects based on key.
+        Left treap gets keys <= key. Right treap gets keys key.
+        After this call the original treap's root is not used anymore
+        */
+        public void Split(int key, out Treap leftTreap, out Treap rightTreap)
+        {
+            Split(_root, key, out TreapNode leftRoot, out TreapNode rightRoot);
+
+            leftTreap = new Treap();
+            rightTreap = new Treap();
+
+            // Because we are inside the Treap class
+            // we are allowed to assign to _root of other Treap instances 
+            leftTreap._root = leftRoot;
+            rightTreap._root = rightRoot;
+        }
+    }
 }
