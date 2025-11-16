@@ -291,7 +291,7 @@ namespace treapproject
             else
             {
                 // root.Key <= key, so root belongs to left side
-                Split(root.Left, key, out leftRoot, out TreapNode newRightLeft, out rightRoot);
+                Split(root.Left, key, out TreapNode newRightLeft, out rightRoot);
                 root.Right = newRightLeft; //Reattach leftover part
                 leftRoot = root; // Root and its right subtree go to "left"
             }
@@ -315,5 +315,52 @@ namespace treapproject
             leftTreap._root = leftRoot;
             rightTreap._root = rightRoot;
         }
+
+        /*
+        Precondition very important every key in left treap < every key in right treap 
+        and we pick whichever root has a higher priority to be the new root, then merges reursviely down 
+        one side. That keeps the heap property and the BST ordering
+
+
+        Private merge helper
+        All keys in leftRoot are <= all keys in rightRoot Returns the root of the merged treap
+        */
+        private static TreapNode Merge(TreapNode leftRoot, TreapNode rightRoot)
+        {
+            if (leftRoot == null)
+                return rightRoot;
+            if (rightRoot == null)
+                return leftRoot;
+
+            // Choose the higher-priority root to stay as root
+            if (leftRoot.Priority > rightRoot.Priority)
+            {
+                // leftRoot remains root; merge its right subtree with rightRoot
+                leftRoot.Right = Merge(leftRoot.Right, rightRoot);
+                return leftRoot;
+            }
+            else
+            {
+                // rightRoot remains root; merge its left subtree with leftRoot
+                rightRoot.Left = Merge(leftRoot, rightRoot.Left);
+                return rightRoot;
+            }
+        }
+
+        /*
+        Public Merge:
+        Given two treaps where all keys in leftTreap are <= all keys in rightTreap,
+        returns a new treap that contains all the keys
+        */
+        public static Treap Merge(Treap leftTreap, Treap rightTreap)
+        {
+            Treap merged = new Treap();
+            merged._root = Merge(leftTreap._root, Treap rightTreap);
+            return merged;
+        }
+        
+        /*
+        Ranged Queries
+        */
     }
 }
