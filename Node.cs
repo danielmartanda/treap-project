@@ -29,10 +29,10 @@ namespace treapproject
 
     public class TreapNode<T> where T : IComparable<T>
     {
-        public T Key;
-        public int Priority;
-        public TreapNode<T> Left;
-        public TreapNode<T> Right;
+        public T Key { get; set; }
+        public int Priority { get; set; }
+        public TreapNode<T> Left { get; set; }
+        public TreapNode<T> Right { get; set; }
 
         public TreapNode(T key, int priority)
         {

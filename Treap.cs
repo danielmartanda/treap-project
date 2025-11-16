@@ -24,8 +24,7 @@ Treap Data Structure
 - 
 - 
 */
-using System.ComponentModel.Design.Serialization;
-using System.Runtime.CompilerServices;
+using System;
 
 namespace treapproject
 {
@@ -161,7 +160,7 @@ namespace treapproject
 
                 if (cmp == 0)
                     return true;
-                else if (cmp == 0)
+                else if (cmp < 0)
                     current = current.Left;
                 else
                     current = current.Right;
