@@ -25,6 +25,8 @@ Treap Data Structure
 - 
 */
 using System;
+using System.Collections.Generic;
+using System.IO.Pipelines;
 
 namespace treapproject
 {
@@ -265,13 +267,12 @@ namespace treapproject
         }
 
         /*
-            Split
-
-            gives a key k a split one treap into two: 
-            Leaf treap all keys < k
-            Right treap all keys > k
+            Split:
+            Given a key k a split one treap into two: 
+            leftRoot: all keys <= k
+            rightRoot: all keys > k
         */
-        private static void Split(TreapNode root, int key, out TreapNode leftRoot, out TreapNode rightRoot)
+        private static void Split(TreapNode<T> root, T key, out TreapNode<T> leftRoot, out TreapNode<T> rightRoot)
         {
             if (root == null)
             {
@@ -280,18 +281,20 @@ namespace treapproject
                 return;
             }
 
-            if (key < root.Key)
+            int cmp = key.CompareTo(root.Key);
+
+            if (cmp < 0)
             {
                 // All keys <= key must live entriely in root.Left
                 // Split the left subtree
-                Split(root.Left, key, out leftRoot, out TreapNode newLeftRight);
+                Split(root.Left, key, out leftRoot, out TreapNode<T> newLeftRight);
                 root.Left = newLeftRight; //Reattach leftover part
                 rightRoot = root; // Root and its right subtree go to "right"
             }
             else
             {
                 // root.Key <= key, so root belongs to left side
-                Split(root.Left, key, out TreapNode newRightLeft, out rightRoot);
+                Split(root.Left, key, out TreapNode<T> newRightLeft, out rightRoot);
                 root.Right = newRightLeft; //Reattach leftover part
                 leftRoot = root; // Root and its right subtree go to "left"
             }
@@ -303,12 +306,12 @@ namespace treapproject
         Left treap gets keys <= key. Right treap gets keys key.
         After this call the original treap's root is not used anymore
         */
-        public void Split(int key, out Treap leftTreap, out Treap rightTreap)
+        public void Split(T key, out Treap<T> leftTreap, out Treap<T> rightTreap)
         {
-            Split(_root, key, out TreapNode leftRoot, out TreapNode rightRoot);
+            Split(_root, key, out TreapNode<T> leftRoot, out TreapNode<T> rightRoot);
 
-            leftTreap = new Treap();
-            rightTreap = new Treap();
+            leftTreap = new Treap<T>();
+            rightTreap = new Treap<T>();
 
             // Because we are inside the Treap class
             // we are allowed to assign to _root of other Treap instances 
@@ -325,7 +328,7 @@ namespace treapproject
         Private merge helper
         All keys in leftRoot are <= all keys in rightRoot Returns the root of the merged treap
         */
-        private static TreapNode Merge(TreapNode leftRoot, TreapNode rightRoot)
+        private static TreapNode<T> Merge(TreapNode<T> leftRoot, TreapNode<T> rightRoot)
         {
             if (leftRoot == null)
                 return rightRoot;
@@ -352,15 +355,53 @@ namespace treapproject
         Given two treaps where all keys in leftTreap are <= all keys in rightTreap,
         returns a new treap that contains all the keys
         */
-        public static Treap Merge(Treap leftTreap, Treap rightTreap)
+        public static Treap<T> Merge(Treap<T> leftTreap, Treap<T> rightTreap)
         {
-            Treap merged = new Treap();
-            merged._root = Merge(leftTreap._root, Treap rightTreap);
+            Treap<T> merged = new Treap<T>();
+            merged._root = Merge(leftTreap._root, rightTreap._root);
             return merged;
         }
-        
+
         /*
-        Ranged Queries
+        Ranged Queries:
+        Given low and high, return all keys x such that low <= x <= high
+
+        we exploit the 
+
+        if root.Key is bigger than low, explore left
+        if root.Key is inrange, add it
+        if root.Key is smaller than high, explore right
+
+        Private helper for range query
+        adds all keys in [low, high] into result using BST-style traversal
         */
+        private static void RangeQuery(TreapNode<T> root, T low, T high, List<T> result)
+        {
+            if (root == null)
+                return;
+
+            // If low is less than current key, values in left subtree might be in range
+            if (low.CompareTo(root.Key) < 0)
+                RangeQuery(root.Left, low, high, result);
+
+            // If current key is within range, add it
+            if (low.CompareTo(root.Key) <= 0 && root.Key.CompareTo(high) <= 0)
+                result.Add(root.Key);
+
+            // If current key is less than high, values in right subtree might be in range 
+            if (root.Key.CompareTo(high) < 0)
+                RangeQuery(root.Right, low, high, result);
+        }
+
+        /*
+        Returns a list of all keys x such that low <= x <= high
+        Time: O(k + h), where k is number of keys returned and h is treap height
+        */
+        public List<T> RangeQuery(T low, T high)
+        {
+            List<T> result = new List<T>();
+            RangeQuery(_root, low, high, result);
+            return result;
+        }
     }
 }
