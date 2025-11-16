@@ -288,14 +288,14 @@ namespace treapproject
                 // All keys <= key must live entriely in root.Left
                 // Split the left subtree
                 Split(root.Left, key, out leftRoot, out TreapNode<T> newLeftRight);
-                root.Left = newLeftRight; //Reattach leftover part
+                root.Left = newLeftRight; //Reattach leftover partnfrom the left side
                 rightRoot = root; // Root and its right subtree go to "right"
             }
             else
             {
                 // root.Key <= key, so root belongs to left side
-                Split(root.Left, key, out TreapNode<T> newRightLeft, out rightRoot);
-                root.Right = newRightLeft; //Reattach leftover part
+                Split(root.Right, key, out TreapNode<T> newRightLeft, out rightRoot);
+                root.Right = newRightLeft; //Reattach leftover part from the right side
                 leftRoot = root; // Root and its right subtree go to "left"
             }
         }
