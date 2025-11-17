@@ -12,17 +12,24 @@ namespace treapproject
         //References the root of the Treap
         private TreapNode<T> _root;     //Reference to the root node of the treap (private field per C# naming guidelines)
 
+        // Public property to expose the root if you need it for testing
+        public TreapNode<T> Root => _root;
+        public Treap()
+        {
+            _root = null;
+        }
+
         /* Method 1: RotateRight
             - Performs a right rotation around the given root
             - Used when the left child has a higher priority than the parent
             - Pushes the parent down to the right and the left child becomes the new root
-            - Time complexity:  O(1) */ 
+            - Time complexity:  O(1) */
 
         private TreapNode<T> RotateRight(TreapNode<T> root)
         {
             TreapNode<T> leftChild = root.Left;                     //Stores the left child of root (pointer reference)
             TreapNode<T> leftChildRightSubtree = leftChild.Right;   //Stores the left child's right subtree (will become roots left child)
-            
+
             //Performs rotation
             leftChild.Right = root;                                 //Makes root the right child of leftChild
             root.Left = leftChildRightSubtree;                      //Connects stored subtree as new left child of root
