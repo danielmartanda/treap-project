@@ -55,7 +55,7 @@ namespace treapproject
         //TEST 1: INSERT & SEARCH
         static void TestInsertAndSearch()
         {
-            Treap<int> t = new Treap<int>();                   //Initializes new treap with int datatype
+            Treap<int> t = new Treap<int>();                    //Initializes new treap with int datatype
             int[] values = {50, 20, 70, 10, 30, 60, 80};        //Initializes an array of 7 values
 
             //Inserts each value in the array as a key in the treap
@@ -65,9 +65,9 @@ namespace treapproject
             }
 
             //Searches each value
-            Console.WriteLine("Search 50 (expect true): " + t.Search(50));      //Expected true
-            Console.WriteLine("Search 10 (expect true): " + t.Search(10));      //Expected true
-            Console.WriteLine("Search 99 (expect false): " + t.Search(99));     //Expected false
+            Console.WriteLine("Searching for 50 (expecting true) -> Result " + t.Search(50));      //Expected true
+            Console.WriteLine("Searching for 60 (expecting true) -> Result " + t.Search(60));      //Expected true
+            Console.WriteLine("Searching for 99 (expecting false) -> Result " + t.Search(99));     //Expected false
 
             Console.WriteLine();
         }
@@ -85,15 +85,15 @@ namespace treapproject
             }
 
             //Deletes a node with no children (leaf)
-            Console.WriteLine("Delete 10 (expect true): " + t.Delete(10));
-            Console.WriteLine("Search 10 (expect false): " + t.Search(10));
+            Console.WriteLine("Deleting 10 (expecting true) -> Result " + t.Delete(10));
+            Console.WriteLine("Searching for 10 (expecting false) -> Result " + t.Search(10));
 
             //Delete a node with one or two children
-            Console.WriteLine("Delete 20 (expect true): " + t.Delete(20));
-            Console.WriteLine("Search 20 (expect false): " + t.Search(20));
+            Console.WriteLine("Deleting 20 (expecting true) -> Result " + t.Delete(20));
+            Console.WriteLine("Searching 20 (expecting false) -> Result " + t.Search(20));
 
             //Delete a non-existing key
-            Console.WriteLine("Delete 999 (expect false): " + t.Delete(999));
+            Console.WriteLine("Deleting 999 (expecting false) -> Result " + t.Delete(999));
 
             Console.WriteLine();
         }
@@ -101,8 +101,8 @@ namespace treapproject
         //TEST 3: SPLIT
         static void TestSplit()
         {
-            Treap<int> t = new Treap<int>();        //Initializes new treap with int datatype
-            int[] values = {50, 20, 70, 10, 30, 60, 80};  //Initializes an array of 7 values
+            Treap<int> t = new Treap<int>();                //Initializes new treap with int datatype
+            int[] values = {50, 20, 70, 10, 30, 60, 80};    //Initializes an array of 7 values
 
             //Inserts each value in the array as a key in the treap
             foreach (int v in values)
@@ -152,7 +152,6 @@ namespace treapproject
         //TEST 5: MERGE QUERY
         static void TestRangeQuery()
         {
-            Console.WriteLine(">>> TestRangeQuery");
 
             Treap<int> t = new Treap<int>();
             int[] values = { 50, 20, 70, 10, 30, 60, 80, 25, 35, 65 };
@@ -174,15 +173,13 @@ namespace treapproject
         //TEST 6: EDGE CASES
         static void TestEdgeCases()
         {
-            Console.WriteLine(">>> TestEdgeCases");
-
             Treap<int> t = new Treap<int>();
 
             // Delete on empty treap
-            Console.WriteLine("Delete from empty (expect false): " + t.Delete(10));
+            Console.WriteLine("Deleting from empty (expecting false) -> Result " + t.Delete(10));
 
             // Search on empty treap
-            Console.WriteLine("Search on empty (expect false): " + t.Search(10));
+            Console.WriteLine("Searching on empty (expecting false) -> Result " + t.Search(10));
 
             // Split empty treap
             t.Split(50, out Treap<int> left, out Treap<int> right);
@@ -191,7 +188,7 @@ namespace treapproject
 
             // Range query on empty treap
             List<int> range = t.RangeQuery(0, 100);
-            Console.WriteLine("RangeQuery on empty (expect 0 items): " + range.Count);
+            Console.WriteLine("RangeQuery on empty (expecting 0 items) -> Result " + range.Count);
 
             Console.WriteLine();
         }
@@ -210,6 +207,6 @@ namespace treapproject
             //If root is null, then treap is empty
             return t.Root == null;
         }
-
+    }
 
 }
